@@ -103,24 +103,28 @@ export default function ProductionEntryForm({
       
       return entry;
     },
-    onSuccess: () => {
+    onSuccess: (entry) => {
       toast({
         title: "Success",
         description: "Production data submitted successfully!",
       });
+      
+      // Capture process and station values before resetting
+      const process = form.getValues().process;
+      const station = form.getValues().station;
       
       // Reset form and notify parent
       form.reset({
         process: "",
         station: "",
         time: "",
-        modelDetails: [{ model: "", quantity: undefined }]
+        modelDetails: [{ model: "", quantity: 0 }]
       });
       setSelectedProcess("");
       
       // Invalidate relevant queries and call success callback
       queryClient.invalidateQueries({ queryKey: ["/api/production"] });
-      onSubmitSuccess();
+      onSubmitSuccess(process, station);
     },
     onError: (error) => {
       toast({
@@ -289,7 +293,7 @@ export default function ProductionEntryForm({
                             placeholder="Enter quantity"
                             {...field}
                             onChange={(e) => {
-                              field.onChange(e.target.value === "" ? undefined : e.target.value);
+                              field.onChange(e.target.value === "" ? 0 : e.target.value);
                             }}
                             disabled={submitMutation.isPending}
                           />
@@ -319,7 +323,7 @@ export default function ProductionEntryForm({
                 variant="outline"
                 size="sm"
                 className="flex items-center gap-1"
-                onClick={() => append({ model: "", quantity: undefined })}
+                onClick={() => append({ model: "", quantity: 0 })}
                 disabled={submitMutation.isPending}
               >
                 <PlusCircle className="h-4 w-4" />
