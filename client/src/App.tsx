@@ -13,9 +13,20 @@ import Footer from "@/components/layout/Footer";
 
 function Router() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div 
+      className="min-h-screen flex flex-col bg-gradient-to-br from-primary/5 to-background"
+      style={{
+        backgroundImage: `url('/assets/nl_metals_logo.jfif')`,
+        backgroundSize: '300px',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-6">
+      <main className="flex-grow container mx-auto px-4 py-6 relative z-10">
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm -z-10 rounded-lg"></div>
         <Switch>
           <Route path="/" component={LoginPage} />
           <Route path="/operator" component={OperatorDashboard} />

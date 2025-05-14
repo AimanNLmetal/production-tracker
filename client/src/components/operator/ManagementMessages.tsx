@@ -157,7 +157,7 @@ export default function ManagementMessages({ process, station }: { process: stri
   });
   
   // Check if an instruction is new
-  const isNewInstruction = (createdAt: string): boolean => {
+  const isNewInstruction = (createdAt: string | Date): boolean => {
     return new Date(createdAt) > lastCheckedTime;
   };
 

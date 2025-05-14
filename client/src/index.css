@@ -3,73 +3,75 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 98%;
-  --foreground: 20 14.3% 4.1%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
+  /* Swan-themed colors - blues and grays */
+  --background: 210 33% 96%;
+  --foreground: 220 14.3% 15.1%;
+  --muted: 210 20% 95.9%;
+  --muted-foreground: 220 10% 44.7%;
   --popover: 0 0% 100%;
-  --popover-foreground: 20 14.3% 4.1%;
+  --popover-foreground: 220 14.3% 15.1%;
   --card: 0 0% 100%;
-  --card-foreground: 20 14.3% 4.1%;
-  --border: 20 5.9% 90%;
-  --input: 20 5.9% 90%;
-  --primary: 207 90% 54%;
-  --primary-foreground: 211 100% 99%;
-  --secondary: 160 84% 31%;
+  --card-foreground: 220 14.3% 15.1%;
+  --border: 220 13% 90%;
+  --input: 220 13% 90%;
+  --primary: 200 85% 45%; /* Main swan blue */
+  --primary-foreground: 210 100% 99%;
+  --secondary: 200 65% 60%; /* Lighter swan blue */
   --secondary-foreground: 210 40% 98%;
-  --accent: 35 100% 50%;
-  --accent-foreground: 24 9.8% 10%;
+  --accent: 215 70% 33%; /* Deeper blue for accents */
+  --accent-foreground: 210 40% 98%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
-  --ring: 20 14.3% 4.1%;
+  --ring: 215 70% 33%;
   --radius: 0.5rem;
   
-  --chart-1: 207 90% 54%;
-  --chart-2: 160 84% 31%;
-  --chart-3: 35 100% 50%;
-  --chart-4: 0 84.2% 60.2%;
-  --chart-5: 210 40% 98%;
+  --chart-1: 200 85% 45%; /* Main swan blue */
+  --chart-2: 215 70% 33%; /* Deeper blue */
+  --chart-3: 200 65% 60%; /* Lighter blue */
+  --chart-4: 210 30% 70%; /* Pale blue */
+  --chart-5: 220 15% 85%; /* Light gray */
   
-  --sidebar-background: 240 10% 3.9%;
+  --sidebar-background: 215 70% 25%; /* Deep swan blue */
   --sidebar-foreground: 0 0% 98%;
-  --sidebar-primary: 207 90% 54%;
+  --sidebar-primary: 200 65% 60%;
   --sidebar-primary-foreground: 210 40% 98%;
-  --sidebar-accent: 35 100% 50%;
-  --sidebar-accent-foreground: 24 9.8% 10%;
-  --sidebar-border: 240 3.7% 15.9%;
-  --sidebar-ring: 240 4.9% 83.9%;
+  --sidebar-accent: 200 85% 45%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-border: 215 40% 30%;
+  --sidebar-ring: 210 40% 98%;
 
-  --success: 120 100% 30%;
+  --success: 160 84% 31%;
   --warning: 36 100% 50%;
   --error: 0 84.2% 60.2%;
 }
 
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --primary: 207 90% 54%;
-  --primary-foreground: 211 100% 99%;
-  --secondary: 160 84% 31%;
+  /* Swan-themed dark mode colors */
+  --background: 215 50% 15%; /* Dark blue background */
+  --foreground: 210 30% 98%;
+  --muted: 215 40% 20%;
+  --muted-foreground: 210 20% 80%;
+  --popover: 215 50% 15%;
+  --popover-foreground: 210 30% 98%;
+  --card: 215 45% 18%;
+  --card-foreground: 210 30% 98%;
+  --border: 215 40% 25%;
+  --input: 215 40% 25%;
+  --primary: 200 80% 50%; /* Brighter blue in dark mode */
+  --primary-foreground: 210 100% 99%;
+  --secondary: 200 65% 40%; /* Muted blue for secondary elements */
   --secondary-foreground: 210 40% 98%;
-  --accent: 35 100% 50%;
-  --accent-foreground: 24 9.8% 10%;
-  --destructive: 0 62.8% 30.6%;
+  --accent: 200 90% 60%; /* Vibrant blue accent */
+  --accent-foreground: 215 50% 15%;
+  --destructive: 0 70% 45%;
   --destructive-foreground: 0 0% 98%;
-  --ring: 240 4.9% 83.9%;
+  --ring: 200 80% 50%;
 
-  --chart-1: 207 90% 54%;
-  --chart-2: 160 84% 31%;
-  --chart-3: 35 100% 50%;
-  --chart-4: 0 62.8% 30.6%;
-  --chart-5: 210 40% 98%;
+  --chart-1: 200 80% 50%; /* Main swan blue */
+  --chart-2: 200 90% 60%; /* Vibrant blue */
+  --chart-3: 200 65% 40%; /* Muted blue */
+  --chart-4: 210 50% 70%; /* Light blue */
+  --chart-5: 210 30% 98%; /* Near white */
 }
 
 @layer base {
