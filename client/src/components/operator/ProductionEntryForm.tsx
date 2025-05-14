@@ -46,7 +46,11 @@ const productionFormSchema = z.object({
 
 type ProductionFormValues = z.infer<typeof productionFormSchema>;
 
-export default function ProductionEntryForm({ onSubmitSuccess }: { onSubmitSuccess: () => void }) {
+export default function ProductionEntryForm({ 
+  onSubmitSuccess 
+}: { 
+  onSubmitSuccess: (process: string, station: string) => void 
+}) {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedProcess, setSelectedProcess] = useState<string>("");
