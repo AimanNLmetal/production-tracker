@@ -85,5 +85,31 @@
 }
 
 .card {
-  @apply bg-card rounded-lg shadow-md border;
+  @apply bg-card/90 backdrop-blur-sm rounded-lg shadow-md border;
+}
+
+/* Swan themed background */
+.swan-bg {
+  position: relative;
+}
+
+.swan-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/assets/nl_metals_logo.jfif');
+  background-size: 400px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+/* Enhanced card on swan background */
+.swan-card {
+  @apply bg-white/80 backdrop-blur-sm border border-primary/20 shadow-lg;
 }
