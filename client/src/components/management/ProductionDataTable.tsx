@@ -2,6 +2,15 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -10,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/constants";
+import { formatDate, PROCESSES, MODELS } from "@/lib/constants";
 import { ProductionEntryWithDetails } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -147,6 +156,74 @@ export default function ProductionDataTable() {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="flex flex-wrap gap-3 mb-4">
+          <div>
+            <Label htmlFor="filterProcess" className="block text-sm font-medium mb-1">
+              Process Filter
+            </Label>
+            <Select
+              value={filterProcess}
+              onValueChange={(value) => {
+                setFilterProcess(value);
+                setCurrentPage(1); // Reset to first page when filter changes
+              }}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="All Processes" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Processes</SelectItem>
+                {PROCESSES.map((process) => (
+                  <SelectItem key={process} value={process}>
+                    {process}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label htmlFor="filterModel" className="block text-sm font-medium mb-1">
+              Model Filter
+            </Label>
+            <Select
+              value={filterModel}
+              onValueChange={(value) => {
+                setFilterModel(value);
+                setCurrentPage(1); // Reset to first page when filter changes
+              }}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="All Models" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Models</SelectItem>
+                {MODELS.map((model) => (
+                  <SelectItem key={model} value={model}>
+                    {model}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <Label htmlFor="filterOperatorId" className="block text-sm font-medium mb-1">
+              Operator ID
+            </Label>
+            <Input
+              id="filterOperatorId"
+              value={filterOperatorId}
+              onChange={(e) => {
+                setFilterOperatorId(e.target.value);
+                setCurrentPage(1); // Reset to first page when filter changes
+              }}
+              className="w-40"
+              placeholder="Enter ID..."
+            />
+          </div>
+        </div>
+        
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>

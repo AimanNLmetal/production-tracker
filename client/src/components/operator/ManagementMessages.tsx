@@ -8,6 +8,7 @@ import { Instruction } from "@shared/schema";
 export default function ManagementMessages() {
   const { user } = useAuth();
   
+  // Filter instructions for this operator's station/process if logged in as operator
   const { data: instructions, isLoading } = useQuery({
     queryKey: ["/api/instructions"],
     enabled: !!user,
