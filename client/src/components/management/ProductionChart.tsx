@@ -49,30 +49,87 @@ const getStartDateFromRange = (range: string): Date => {
 };
 
 // Function to generate chart data from production entries
-const generateChartData = (entries: ProductionEntryWithDetails[]) => {
-  // Group entries by time
-  const entriesByTime = entries.reduce((acc, entry) => {
-    if (!acc[entry.time]) {
-      acc[entry.time] = { time: entry.time, quantity: 0 };
-    }
+const generateChartData = (entries: ProductionEntryWithDetails[], groupBy: 'time' | 'model' | 'process' | 'station') => {
+  if (groupBy === 'time') {
+    // Group entries by time
+    const entriesByTime = entries.reduce((acc, entry) => {
+      if (!acc[entry.time]) {
+        acc[entry.time] = { name: entry.time, quantity: 0 };
+      }
+      
+      // Sum quantities from all details in this entry
+      const totalQuantity = entry.details.reduce((sum, detail) => sum + detail.quantity, 0);
+      acc[entry.time].quantity += totalQuantity;
+      
+      return acc;
+    }, {} as Record<string, { name: string, quantity: number }>);
     
-    // Sum quantities from all details in this entry
-    const totalQuantity = entry.details.reduce((sum, detail) => sum + detail.quantity, 0);
-    acc[entry.time].quantity += totalQuantity;
+    // Convert to array and sort by time
+    const timeOrder = ["8am", "9.45am", "11.30am", "2.45pm", "5pm", "8pm"];
+    return Object.values(entriesByTime).sort((a, b) => 
+      timeOrder.indexOf(a.name) - timeOrder.indexOf(b.name)
+    );
+  } 
+  else if (groupBy === 'model') {
+    // Group by model
+    const entriesByModel = {} as Record<string, { name: string, quantity: number }>;
     
-    return acc;
-  }, {} as Record<string, { time: string, quantity: number }>);
+    // Process each entry and its details
+    entries.forEach(entry => {
+      entry.details.forEach(detail => {
+        if (!entriesByModel[detail.model]) {
+          entriesByModel[detail.model] = { name: detail.model, quantity: 0 };
+        }
+        entriesByModel[detail.model].quantity += detail.quantity;
+      });
+    });
+    
+    // Convert to array and sort by model name
+    return Object.values(entriesByModel).sort((a, b) => a.name.localeCompare(b.name));
+  }
+  else if (groupBy === 'process') {
+    // Group by process
+    const entriesByProcess = entries.reduce((acc, entry) => {
+      if (!acc[entry.process]) {
+        acc[entry.process] = { name: entry.process, quantity: 0 };
+      }
+      
+      // Sum quantities from all details in this entry
+      const totalQuantity = entry.details.reduce((sum, detail) => sum + detail.quantity, 0);
+      acc[entry.process].quantity += totalQuantity;
+      
+      return acc;
+    }, {} as Record<string, { name: string, quantity: number }>);
+    
+    // Convert to array and sort by process name
+    return Object.values(entriesByProcess).sort((a, b) => a.name.localeCompare(b.name));
+  }
+  else if (groupBy === 'station') {
+    // Group by station
+    const entriesByStation = entries.reduce((acc, entry) => {
+      const key = `${entry.process}-${entry.station}`;
+      if (!acc[key]) {
+        acc[key] = { name: `${entry.process} (${entry.station})`, quantity: 0 };
+      }
+      
+      // Sum quantities from all details in this entry
+      const totalQuantity = entry.details.reduce((sum, detail) => sum + detail.quantity, 0);
+      acc[key].quantity += totalQuantity;
+      
+      return acc;
+    }, {} as Record<string, { name: string, quantity: number }>);
+    
+    // Convert to array and sort by station name
+    return Object.values(entriesByStation).sort((a, b) => a.name.localeCompare(b.name));
+  }
   
-  // Convert to array and sort by time
-  const timeOrder = ["8am", "9.45am", "11.30am", "2.45pm", "5pm", "8pm"];
-  return Object.values(entriesByTime).sort((a, b) => 
-    timeOrder.indexOf(a.time) - timeOrder.indexOf(b.time)
-  );
+  return [];
 };
 
 export default function ProductionChart() {
   const [selectedProcess, setSelectedProcess] = useState<string>("all");
   const [dateRange, setDateRange] = useState<string>("today");
+  const [groupBy, setGroupBy] = useState<'time' | 'model' | 'process' | 'station'>('time');
   
   const { data: entries, isLoading } = useQuery({
     queryKey: ["/api/production"],
@@ -92,7 +149,7 @@ export default function ProductionChart() {
       return true;
     });
   
-  const chartData = generateChartData(filteredEntries);
+  const chartData = generateChartData(filteredEntries, groupBy);
   
   if (isLoading) {
     return (
@@ -160,6 +217,26 @@ export default function ProductionChart() {
               </SelectContent>
             </Select>
           </div>
+
+          <div>
+            <Label htmlFor="groupByFilter" className="block text-sm font-medium mb-1">
+              Group By
+            </Label>
+            <Select
+              value={groupBy}
+              onValueChange={(value) => setGroupBy(value as 'time' | 'model' | 'process' | 'station')}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Group data by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="time">Time</SelectItem>
+                <SelectItem value="model">Model</SelectItem>
+                <SelectItem value="process">Process</SelectItem>
+                <SelectItem value="station">Station</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         
         <div className="h-64">
@@ -170,7 +247,7 @@ export default function ProductionChart() {
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
+                <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
@@ -189,7 +266,7 @@ export default function ProductionChart() {
         </div>
         
         <div className="mt-4 text-sm text-neutral-500">
-          Chart shows output quantities by time. Adjust filters to view different data sets.
+          Chart shows output quantities grouped by {groupBy}. Adjust filters and grouping to view different data sets.
         </div>
       </CardContent>
     </Card>

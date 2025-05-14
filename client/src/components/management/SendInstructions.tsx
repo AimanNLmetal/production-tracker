@@ -54,9 +54,16 @@ export default function SendInstructions() {
   });
   
   // Determine available stations based on selected process
-  const availableStations = selectedProcess === "Mul.Drilling" 
-    ? ["All Stations", ...STATIONS_BY_PROCESS["Mul.Drilling"]] 
-    : ["All Stations", ...STATIONS_BY_PROCESS.default];
+  let availableStations: string[] = ["All Stations"];
+
+  if (selectedProcess === "All Processes") {
+    // For "All Processes", we only offer "All Stations" option
+    availableStations = ["All Stations"];
+  } else if (selectedProcess === "Mul.Drilling") {
+    availableStations = ["All Stations", ...STATIONS_BY_PROCESS["Mul.Drilling"]];
+  } else if (selectedProcess) {
+    availableStations = ["All Stations", ...STATIONS_BY_PROCESS.default];
+  }
   
   // Mutation for sending instructions
   const instructionMutation = useMutation({

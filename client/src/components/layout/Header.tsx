@@ -34,16 +34,10 @@ export default function Header() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {user.role === "operator" && user.operatorId && (
-                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                    Operator ID: {user.operatorId}
-                  </div>
-                )}
-                {user.role === "management" && (
-                  <div className="px-2 py-1.5 text-sm text-muted-foreground">
-                    Management Access
-                  </div>
-                )}
+                {/* Always show ID for all users */}
+                <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                  {user.role === "operator" ? "Operator" : "Management"} ID: {user.operatorId}
+                </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
                   asChild

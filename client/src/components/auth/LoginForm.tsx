@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 export default function LoginForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [operatorId, setOperatorId] = useState("");
+  const [name, setName] = useState("");
   const [isManagementLogin, setIsManagementLogin] = useState(false);
   const { login, isLoading } = useAuth();
   const { toast } = useToast();
@@ -16,17 +16,19 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!username || !password) {
+    if (!operatorId || !name) {
       toast({
         title: "Validation Error",
-        description: "Please enter both username and password",
+        description: "Please enter both ID and Name",
         variant: "destructive",
       });
       return;
     }
     
     try {
-      await login(username, password);
+      // Use simpler login flow with ID and name only
+      const role = isManagementLogin ? "management" : "operator";
+      await login(operatorId, name, role);
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -34,12 +36,9 @@ export default function LoginForm() {
 
   const toggleLoginType = () => {
     setIsManagementLogin(!isManagementLogin);
-    // Pre-fill username for demo purposes
-    if (!isManagementLogin) {
-      setUsername("manager");
-    } else {
-      setUsername("operator");
-    }
+    // Clear fields when switching login type
+    setOperatorId("");
+    setName("");
   };
 
   return (
@@ -51,30 +50,30 @@ export default function LoginForm() {
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="username" className="block text-sm font-medium mb-1">
-              Username
+            <Label htmlFor="operatorId" className="block text-sm font-medium mb-1">
+              {isManagementLogin ? "Management ID" : "Operator ID"}
             </Label>
             <Input
-              id="username"
+              id="operatorId"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={operatorId}
+              onChange={(e) => setOperatorId(e.target.value)}
               className="w-full p-2"
-              placeholder="Enter your username"
+              placeholder={isManagementLogin ? "Enter management ID" : "Enter operator ID (e.g. 12275)"}
             />
           </div>
           
           <div>
-            <Label htmlFor="password" className="block text-sm font-medium mb-1">
-              Password
+            <Label htmlFor="name" className="block text-sm font-medium mb-1">
+              Name
             </Label>
             <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full p-2"
-              placeholder="Enter your password"
+              placeholder="Enter your full name"
             />
           </div>
           

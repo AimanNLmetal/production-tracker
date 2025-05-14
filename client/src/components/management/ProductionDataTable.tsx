@@ -74,6 +74,9 @@ function Pagination({
 
 export default function ProductionDataTable() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterProcess, setFilterProcess] = useState<string>("all");
+  const [filterModel, setFilterModel] = useState<string>("all");
+  const [filterOperatorId, setFilterOperatorId] = useState<string>("");
   const PAGE_SIZE = 10;
   
   const { data: entries, isLoading } = useQuery({
@@ -111,8 +114,22 @@ export default function ProductionDataTable() {
     }))
   );
   
+  // Apply filters
+  const filteredEntries = flattenedEntries.filter(entry => {
+    // Filter by process if not "all"
+    if (filterProcess !== "all" && entry.process !== filterProcess) return false;
+    
+    // Filter by model if not "all"
+    if (filterModel !== "all" && entry.model !== filterModel) return false;
+    
+    // Filter by operator ID if provided
+    if (filterOperatorId && !entry.operatorId.includes(filterOperatorId)) return false;
+    
+    return true;
+  });
+  
   // Sort by most recent first
-  const sortedEntries = [...flattenedEntries].sort(
+  const sortedEntries = [...filteredEntries].sort(
     (a, b) => b.date.getTime() - a.date.getTime()
   );
   

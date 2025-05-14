@@ -6,22 +6,24 @@ import { useToast } from "@/hooks/use-toast";
 // Define user type
 type User = {
   id: number;
-  username: string;
+  operatorId: string;
   name: string;
   role: "operator" | "management";
-  operatorId?: string;
 };
 
 // Define auth context type
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (operatorId: string, name: string, role: "operator" | "management") => Promise<void>;
   logout: () => void;
 }
 
 // Create auth context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// ID counter for simulating user IDs
+let idCounter = 1;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -43,12 +45,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  // Login function
-  const login = async (username: string, password: string) => {
+  // Login function with simplified approach using ID and name
+  const login = async (operatorId: string, name: string, role: "operator" | "management") => {
     try {
       setIsLoading(true);
-      const response = await apiRequest("POST", "/api/auth/login", { username, password });
-      const userData = await response.json();
+      
+      // Create a user object without server validation
+      // In a real app, you would still validate with the server
+      const userData: User = {
+        id: idCounter++,
+        operatorId,
+        name,
+        role
+      };
       
       // Save user data
       setUser(userData);
@@ -63,12 +72,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       toast({
         title: "Login successful",
-        description: `Welcome back, ${userData.name}!`,
+        description: `Welcome, ${userData.name}!`,
       });
     } catch (error) {
       toast({
         title: "Login failed",
-        description: "Invalid username or password",
+        description: "Something went wrong",
         variant: "destructive",
       });
       console.error("Login error:", error);
